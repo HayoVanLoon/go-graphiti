@@ -123,12 +123,12 @@ func TestGraphiti_AllDistances(t *testing.T) {
 }
 
 func ExampleGraph_AllDistances() {
-	ng := newNotGraph()
+	initLookupExample()
 	gr := g.Graphiti[struct{}, string, string]{
-		GetName:  ng.GetName,
-		GetNode:  ng.GetNode,
-		GetNext:  ng.GetNext,
-		GetNodes: ng.GetNodes,
+		GetName:  lookup.GetName,
+		GetNode:  lookup.GetNode,
+		GetNext:  lookup.GetNext,
+		GetNodes: lookup.StartWith("A"),
 	}
 	graph, _ := gr.New(struct{}{}, nil)
 	_ = graph.AllDistances()
@@ -368,22 +368,7 @@ func edgesDisconnectedDAG() [][3]int {
 	}
 }
 
-func newNotGraph() lookup.NotGraph {
-	return lookup.NotGraph{
-		Start: "A",
-		Client: lookup.Client{
-			Nodes: map[string]basic.Node{
-				"A": {Name: "A"},
-				"B": {Name: "B"},
-				"C": {Name: "C"},
-				"D": {Name: "D"},
-			},
-			Edges: []basic.Edge{
-				{From: "A", To: "B", Cost: 1},
-				{From: "A", To: "C", Cost: 1},
-				{From: "B", To: "C", Cost: 1},
-				{From: "C", To: "D", Cost: 1},
-			},
-		},
-	}
+func initLookupExample() {
+	data := simpleDAG()
+	lookup.InitDatabase(data.Nodes, data.Edges)
 }
